@@ -2,22 +2,22 @@ const router = require('express').Router();
 const saveData = require('/notes');
 
 // GET request
-router.get('/notes', function (req, res) {
+router.get('/api/notes', function (req, res) {
     res.send('GET request to the homepage')
     saveData.retrieveNotes();
-
-
-
-  })
-
+    .then(results => {res.status(200).json {}})
+    .catch(err => {res.status(500).end(err.stack);
+    })
+  
 // POST request
-  router.post('/', function (req, res) {
-    res.send('Birds home page')
+router.post('/api/notes', function (req, res) {
+    
   })
 
 // DELETE Request
-  router.delete('/about', function (req, res) {
-    res.send('About birds')
-  })
+router.delete('/api/notes/:id', function (req, res) {
+   
+})
 
+// accessing router middleware
 module.exports = router;
