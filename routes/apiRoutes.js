@@ -1,8 +1,6 @@
 const router = require('express').Router();
-const saveData = require('../db/db.json');
-// Helper method for generating unique ids
-// const uuid = require('./helper/uuid');
-// const util = require('./helper/util);
+const saveData = require('../db/saveData');
+
 
 // GET request
 router.get('/notes', function (req, res) {
