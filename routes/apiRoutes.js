@@ -1,23 +1,28 @@
 const router = require('express').Router();
 const saveData = require('/notes');
+// Helper method for generating unique ids
+const uuid = require('./helper/uuid');
 
 // GET request
-router.get('/api/notes', function (req, res) {
-    res.send('GET request to the homepage')
-    saveData.retrieveNotes();
-    .then(results => {res.status(200).json {}})
-    .catch(err => {res.status(500).end(err.stack);
-    })
+router.get('/notes', function (req, res) {
+    store
+    .retrieveNotes();
+    .then(notes => res.json(notes))
+    .catch(err => res.status(500).json(err))
+});
   
 // POST request
-router.post('/api/notes', function (req, res) {
-    
-  })
+router.post('/notes', function (req, res) {
+    .addNote(req.body)
+    .then(notes => res.json(notes))
+    .catch(err => res.status(500).json(err))
+});
 
 // DELETE Request
-router.delete('/api/notes/:id', function (req, res) {
-   
-})
+router.delete('/notes/:title', function (req, res) {
+    .then(notes => res.json({ ok: true }))
+    .catch(err => res.status(500).json(err))
+});
 
 // accessing router middleware
 module.exports = router;
