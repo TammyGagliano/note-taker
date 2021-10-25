@@ -1,14 +1,12 @@
 // Dependencies - need express to interact with the front end
 const express = require("express");
-const fs = require("fs");
-const path = require('path');
 
 // Point server to the route files 
 const apiRoutes = require('./routes/apiRoutes');
 const htmlRoutes = require('./routes/htmlRoutes');
 
 // Set Port
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // Initialize our app variable by setting it to the value of express()
 const app = express();
