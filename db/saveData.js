@@ -1,17 +1,17 @@
-const fs = require("fs");
 // converts callback-based functions to promise-based functions
 const util = require("util");
+const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
 
 // Convert `fs.readFile()` into a function that takes the same parameters but returns a promise.
-const readFromFile = util.promisify(fs.readFile);
-const writeToNote = util.promisify(fs.writeFile);
+const readFileAsync = util.promisify(fs.readFile);
+const writeFileAsync = util.promisify(fs.writeFile);
 class Save {
-  write(note) {
-    return writeToNote("./db.json", JSON.stringify(note));
-  }
   read() {
-    return readFromFile("./db.json");
+    return readFileAsync("./db.json");
+  }
+  write(note) {
+    return writeFileAsync("./db.json", JSON.stringify(note));
   }
 
   // read the data 
@@ -21,11 +21,11 @@ class Save {
         try {
   // the statement to be executed
         parsedNotes = [].concat(JSON.parse(notes));
-    } catch (error) {
+    } catch (err) {
         parsedNotes = [];
     }
     return parsedNotes;
- })
+ });
 }
 
   // write the data to the file
