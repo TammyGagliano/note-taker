@@ -23,7 +23,7 @@ const path = require("path");
 
     // DELETE Request
     router.delete("/api/notes/:id", function (req, res) {
-      notes.splice(req.params.id);
+      notes.splice(req.params.id, 1);
       updateDb();
     });
 
@@ -38,13 +38,13 @@ const path = require("path");
     );
     //updates the json file whenever a note is added or deleted
     function updateDb() {
-      fs.writeFile("db/db.json", JSON.stringify(notes, "\t"), (err) => {
+      fs.writeFile(path.join(process.cwd(), "db/db.json", JSON.stringify(notes, "\t"), (err) => {
         if (err) {
             console.log("error")
         }
         console.log("Success!");
         return true;
-      });
+      }));
     }
   });
 
