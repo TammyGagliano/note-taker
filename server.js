@@ -1,6 +1,7 @@
 // Dependencies - need express to interact with the front end
 const express = require("express");
-
+const fs = require("fs");
+const path = require('path');
 
 // Point server to the route files 
 const apiRoutes = require('./routes/apiRoutes');
