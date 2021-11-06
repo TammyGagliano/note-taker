@@ -1,32 +1,29 @@
-const router = require("express").Router();
-//const { addNote } = require("../db/saveData");
-const save =  require("../db/saveData");
+const router = require('express').Router();
+const store = require('../db/saveData');
 
- 
-    // GET request
-    router.get("/notes", function (req, res) {
-      // Read the db.json file and return all saved notes as JSON.
-      save.retrieveNotes().then((notes) => {
-          return res.json(notes);
-        })
-        .catch((err) => res.status(500).json(err));
-    });
+// GET "/api/notes" responds with all notes from the database
+router.get('/notes', (req, res) => {
+  store
+    .getNotes()
+    .then((notes) => {
+      return res.json(notes);
+    })
+    .catch((err) => res.status(500).json(err));
+});
 
-    // POST request
-    router.post("/notes", function (req, res) {
-      // Receives a new note, adds it to db.json, and returns a new note
-      save.addNote(req.body)
-      .then((note) => res.json(note))
-      .catch((err) => res.status(500).json(err));
-    });
+router.post('/notes', (req, res) => {
+  store
+    .addNote(req.body)
+    .then((note) => res.json(note))
+    .catch((err) => res.status(500).json(err));
+});
 
-    // DELETE Request
-    router.delete("/notes/:id", function (req, res) {
-      save
-      .deleteNote(req.params.id)
-      .then(() => res.json({ ok: true }))
-      .catch((err) => res.status(500).json(err));
-  });
-  
-// accessing router middleware
+// DELETE "/api/notes" deletes the note with an id equal to req.params.id
+router.delete('/notes/:id', (req, res) => {
+  store
+    .removeNote(req.params.id)
+    .then(() => res.json({ ok: true }))
+    .catch((err) => res.status(500).json(err));
+});
+
 module.exports = router;

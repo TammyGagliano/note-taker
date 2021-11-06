@@ -1,52 +1,59 @@
 // converts callback-based functions to promise-based functions
 const util = require("util");
 const fs = require("fs");
-const { v4: uuidv4 } = require("uuid");
+
+//This package will be used to generate our unique ids. https://www.npmjs.com/package/uuid
+const { v4: uuidv4 } = require('uuid');
 
 // Convert `fs.readFile()` into a function that takes the same parameters but returns a promise.
 const readFileAsync = util.promisify(fs.readFile);
 const writeFileAsync = util.promisify(fs.writeFile);
 class Save {
   read() {
-    return readFileAsync("../db/db.json", "utf8");
+    return readFileAsync('db/db.json', 'utf8');
   }
+
   write(note) {
-    return writeFileAsync("../db/db.json", JSON.stringify(note));
+    return writeFileAsync('db/db.json', JSON.stringify(note));
   }
 
-  // read the data 
-  async retrieveNotes() {
-    const notes = await this.read();
-    let parsedNotes;
-    try {
-      // the statement to be executed
-      parsedNotes = [].concat(JSON.parse(notes));
-    } catch (err) {
-      parsedNotes = [];
-    }
-    return parsedNotes;
-}
+  getNotes() {
+    return this.read().then((notes) => {
+      let parsedNotes;
 
-  // write the data to the file
-  async addNote(note) {
-    const title = note;
-    const text = note;
-      if (!title || !text) {
-        throw new Error ('These fields cannot be blank!');
+      // If notes isn't an array or can't be turned into one, send back a new empty array
+      try {
+        parsedNotes = [].concat(JSON.parse(notes));
+      } catch (err) {
+        parsedNotes = [];
       }
-      // Use UUID package to add unique ID
-      const newNote = { title, text, id: uuidv4() };
-      // Retrieve notes and add the new note, write all the updated notes, return the newNote
-      const notes = await this.retrieveNotes();
-    const updateNotes = [...notes, newNote];
-    await this.write(updateNotes);
-    return newNote;  // return note
+
+      return parsedNotes;
+    });
+  }
+
+  addNote(note) {
+    const { title, text } = note;
+
+    if (!title || !text) {
+      throw new Error("Note 'title' and 'text' cannot be blank");
     }
 
-  async deleteNote(id) {
-    const notes = await this.retrieveNotes();
-    const filteredNotes = notes.filter((note) => note.id !== id);
-    return await this.write(filteredNotes);
+    // Add a unique id to the note using uuid package
+    const newNote = { title, text, id: uuidv4() };
+
+    // Get all notes, add the new note, write all the updated notes, return the newNote
+    return this.getNotes()
+      .then((notes) => [...notes, newNote])
+      .then((updatedNotes) => this.write(updatedNotes))
+      .then(() => newNote);
+  }
+
+  removeNote(id) {
+    // Get all notes, remove the note with the given id, write the filtered notes
+    return this.getNotes()
+      .then((notes) => notes.filter((note) => note.id !== id))
+      .then((filteredNotes) => this.write(filteredNotes));
   }
 }
 
