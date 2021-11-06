@@ -29,6 +29,8 @@ Open project directory, then npm install to install all dependencies
 ## Contributions
 Tammy Gagliano 
 https://github.com/TammyGagliano/note-taker
+Heroku Deployment
+https://tg-note-taker-app.herokuapp.com/
 
 ## ScreenShot
 ![Note Taker](./notetakerscreenshot.png)
