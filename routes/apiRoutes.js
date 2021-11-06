@@ -6,7 +6,7 @@ const save =  require("../db/saveData");
     // GET request
     router.get("/notes", function (req, res) {
       // Read the db.json file and return all saved notes as JSON.
-      save.getNotes().then((notes) => {
+      save.retrieveNotes().then((notes) => {
           return res.json(notes);
         })
         .catch((err) => res.status(500).json(err));
@@ -23,7 +23,7 @@ const save =  require("../db/saveData");
     // DELETE Request
     router.delete("/notes/:id", function (req, res) {
       save
-      .removeNote(req.params.id)
+      .deleteNote(req.params.id)
       .then(() => res.json({ ok: true }))
       .catch((err) => res.status(500).json(err));
   });

@@ -2,6 +2,11 @@
 ## Description: 
 An application that can be used to write, save, and delete notes. This application uses express backend and saves and retrieves note data from a JSON file.
 
+## User Story
+- AS A busy entrepreneur
+- I WANT to be able to write and save notes
+- SO THAT I can organize my thoughts and keep track of tasks I need to complete
+
 ## List of Technology
 - Javascript
 - HTML
@@ -24,3 +29,6 @@ Open project directory, then npm install to install all dependencies
 ## Contributions
 Tammy Gagliano 
 https://github.com/TammyGagliano/note-taker
+
+## ScreenShot
+![Note Taker](./notetakerscreenshot.png)

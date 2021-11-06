@@ -8,28 +8,27 @@ const readFileAsync = util.promisify(fs.readFile);
 const writeFileAsync = util.promisify(fs.writeFile);
 class Save {
   read() {
-    return readFileAsync("./db.json");
+    return readFileAsync("../db/db.json", "utf8");
   }
   write(note) {
-    return writeFileAsync("./db.json", JSON.stringify(note));
+    return writeFileAsync("../db/db.json", JSON.stringify(note));
   }
 
   // read the data 
-  getNotes() {
-    return this.read().then(notes => {
-      let parsedNotes;
-        try {
-  // the statement to be executed
-        parsedNotes = [].concat(JSON.parse(notes));
+  async retrieveNotes() {
+    const notes = await this.read();
+    let parsedNotes;
+    try {
+      // the statement to be executed
+      parsedNotes = [].concat(JSON.parse(notes));
     } catch (err) {
-        parsedNotes = [];
+      parsedNotes = [];
     }
     return parsedNotes;
- });
 }
 
   // write the data to the file
-  addNote(note) {
+  async addNote(note) {
     const title = note;
     const text = note;
       if (!title || !text) {
@@ -38,16 +37,16 @@ class Save {
       // Use UUID package to add unique ID
       const newNote = { title, text, id: uuidv4() };
       // Retrieve notes and add the new note, write all the updated notes, return the newNote
-      return this.getNotes()
-      .then(notes => [...notes, newNote])
-      .then((updateNotes) => this.write(updateNotes))
-      .then(() => newNote);  // return note
+      const notes = await this.retrieveNotes();
+    const updateNotes = [...notes, newNote];
+    await this.write(updateNotes);
+    return newNote;  // return note
     }
 
-  removeNote(id) {
-    return this.getNotes()
-    .then((notes) => notes.filter((note) => note.id !== id))
-    .then((filteredNotes) => this.write(filteredNotes));
+  async deleteNote(id) {
+    const notes = await this.retrieveNotes();
+    const filteredNotes = notes.filter((note) => note.id !== id);
+    return await this.write(filteredNotes);
   }
 }
 
